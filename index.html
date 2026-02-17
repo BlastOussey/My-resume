@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ousseynou Diop | Cloud & DevOps Architect</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tailwind CSS for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #0ea5e9;
+            --accent: #f43f5e;
+            --dark-bg: #030712;
+            --card-bg: #111827;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--dark-bg);
+            color: #f3f4f6;
+            scroll-behavior: smooth;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hero Animation */
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+        }
+
+        .skill-badge {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-badge:hover {
+            transform: translateY(-2px);
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--primary);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float { animation: float 4s ease-in-out infinite; }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Avatar Container */
+        .avatar-glow {
+            position: relative;
+        }
+        .avatar-glow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(20px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">O</div>
+                <span class="text-xl font-bold tracking-tight">Ousseynou<span class="text-blue-500">Diop.</span></span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link text-sm font-medium">About</a>
+                <a href="#stack" class="nav-link text-sm font-medium">Stack</a>
+                <a href="#experience" class="nav-link text-sm font-medium">Experience</a>
+                <a href="#projects" class="nav-link text-sm font-medium">Projects</a>
+                <a href="#contact" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-sm font-semibold transition-colors shadow-lg shadow-blue-500/20">Contact Me</a>
+            </div>
+
+            <button class="md:hidden text-gray-400">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 overflow-hidden hero-gradient">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/3 text-center md:text-left">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6 tracking-widest uppercase">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        <span>Available for Cloud Architect Roles</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                        Architecting <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Scalable</span> Cloud Ecosystems.
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl leading-relaxed">
+                        DevOps & Cloud Engineer specializing in high-availability AWS architectures, Infrastructure as Code, and automated CI/CD pipelines for enterprise-grade applications.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#projects" class="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-all flex items-center justify-center">
+                            View Infrastructure <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-full sm:w-auto px-8 py-4 glass text-white font-bold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center border border-white/10">
+                            Download Resume <i data-lucide="download" class="ml-2 w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block md:w-1/3">
+                    <div class="relative float avatar-glow">
+                        <!-- Cloud Engineer Avatar -->
+                        <div class="relative w-72 h-72 mx-auto">
+                            <div class="absolute -inset-2 bg-blue-500/20 blur-2xl rounded-full"></div>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ousseynou&backgroundColor=030712&mood=happy&top=shortHair&topColor=2c1b18&accessories=round" alt="Ousseynou Diop" class="relative rounded-full w-full h-full border-4 border-blue-500/30 shadow-2xl bg-gray-900">
+                            <!-- Floating Cloud Icon -->
+                            <div class="absolute bottom-4 -right-4 bg-blue-600 p-3 rounded-2xl shadow-xl animate-bounce">
+                                <i data-lucide="cloud" class="text-white w-6 h-6"></i>
+                            </div>
+                            <!-- Floating Code Icon -->
+                            <div class="absolute top-4 -left-4 bg-emerald-500 p-3 rounded-2xl shadow-xl animate-pulse">
+                                <i data-lucide="terminal" class="text-white w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tech Stack / Skills -->
+    <section id="stack" class="py-20 bg-black/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-extrabold mb-12 text-center">Core Technical <span class="text-blue-500">Ecosystem</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Cloud & Infrastructure -->
+                <div class="glass p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 mb-6">
+                        <i data-lucide="cloud"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Infrastructure & Cloud</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">AWS (Full Suite)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Terraform / HCL</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">CloudFormation</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Ansible</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Route 53</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">VPC Peering</span>
+                    </div>
+                </div>
+
+                <!-- DevOps & Containers -->
+                <div class="glass p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 mb-6">
+                        <i data-lucide="container"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Containerization & CI/CD</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Docker</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Kubernetes (EKS)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">GitHub Actions</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Jenkins</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Helm Charts</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">ArgoCD</span>
+                    </div>
+                </div>
+
+                <!-- Backend & Databases -->
+                <div class="glass p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 mb-6">
+                        <i data-lucide="database"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Logic & Persistence</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Python (Boto3)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Node.js</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">DynamoDB</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">PostgreSQL (RDS)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Redis</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-lg text-sm bg-gray-800">Prometheus/Grafana</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section with Terminal UI -->
+    <section id="about" class="py-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="glass rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+                <div class="bg-gray-800 px-4 py-2 flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="text-xs text-gray-400 font-mono ml-4">ousseynou@aws-instance: ~</span>
+                </div>
+                <div class="p-8 mono text-sm md:text-base leading-relaxed">
+                    <p class="text-green-400 mb-2">$ cat bio.md</p>
+                    <p class="text-gray-300 mb-6">
+                        I am Ousseynou Diop, a Cloud Engineer dedicated to bridging the gap between development and operations. My expertise lies in designing "zero-touch" deployment environments and highly resilient AWS infrastructures. I thrive on optimizing cloud costs, tightening IAM security boundaries, and migrating monolithic applications to containerized microservices. 
+                    </p>
+                    <p class="text-green-400 mb-2">$ whoami --vision</p>
+                    <p class="text-gray-300 mb-6">
+                        "To build cloud-native systems that are self-healing, globally distributed, and inherently secure."
+                    </p>
+                    <p class="text-green-400 mb-2">$ ls certifications/</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-400">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="award" class="text-blue-500 w-4 h-4"></i>
+                            <span>AWS Certified Solutions Architect – Associate</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="award" class="text-blue-500 w-4 h-4"></i>
+                            <span>AWS Certified Developer – Associate</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="award" class="text-blue-500 w-4 h-4"></i>
+                            <span>HashiCorp Certified: Terraform Associate</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="award" class="text-blue-500 w-4 h-4"></i>
+                            <span>CKA: Certified Kubernetes Administrator (Pursuing)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-20 bg-black/40">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-extrabold mb-12 flex items-center">
+                <i data-lucide="briefcase" class="mr-4 text-blue-500"></i> Professional Roadmap
+            </h2>
+            
+            <div class="space-y-12">
+                <!-- Exp 1 -->
+                <div class="relative pl-8 border-l-2 border-blue-500/30">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+                    <div class="mb-2 flex flex-col md:flex-row md:justify-between">
+                        <h3 class="text-xl font-bold">Cloud DevOps Engineer</h3>
+                        <span class="text-blue-400 text-sm font-semibold">Jan 2024 — Present</span>
+                    </div>
+                    <p class="text-gray-400 font-medium mb-4">Enterprise Solutions Inc.</p>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 text-blue-500 shrink-0 mt-0.5"></i> Managed 50+ AWS production environments using Terraform, reducing manual provisioning time by 85%.</li>
+                        <li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 text-blue-500 shrink-0 mt-0.5"></i> Engineered multi-region failover strategies using Route 53 and Global Accelerator for 99.99% uptime.</li>
+                        <li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 text-blue-500 shrink-0 mt-0.5"></i> Reduced monthly AWS spend by $4k through right-sizing instances and implementing Spot Instances for non-critical workloads.</li>
+                    </ul>
+                </div>
+
+                <!-- Exp 2 -->
+                <div class="relative pl-8 border-l-2 border-blue-500/30">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-blue-500/50"></div>
+                    <div class="mb-2 flex flex-col md:flex-row md:justify-between">
+                        <h3 class="text-xl font-bold">Junior Cloud Consultant</h3>
+                        <span class="text-blue-400/60 text-sm font-semibold">June 2022 — Dec 2023</span>
+                    </div>
+                    <p class="text-gray-400 font-medium mb-4">TechNexus Systems</p>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 text-blue-500 shrink-0 mt-0.5"></i> Assisted in containerizing legacy .NET apps using Docker and deploying to AWS ECS.</li>
+                        <li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 text-blue-500 shrink-0 mt-0.5"></i> Set up centralized logging using the ELK stack (Elasticsearch, Logstash, Kibana) across development tiers.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section id="projects" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-4xl font-extrabold mb-4">Cloud <span class="text-blue-500">Deployments</span></h2>
+                    <p class="text-gray-400 max-w-lg">Real-world engineering solutions showcasing technical depth in AWS and DevOps practices.</p>
+                </div>
+                <a href="https://github.com" class="mt-6 md:mt-0 text-blue-400 font-bold hover:text-blue-300 flex items-center">
+                    Explore all on GitHub <i data-lucide="external-link" class="ml-2 w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="glass rounded-2xl overflow-hidden flex flex-col group h-full">
+                    <div class="h-48 bg-gradient-to-br from-blue-600 to-indigo-900 p-8 flex items-center justify-center relative">
+                        <i data-lucide="cloud-lightning" class="w-20 h-20 text-white opacity-20 absolute top-4 right-4"></i>
+                        <h4 class="text-2xl font-bold text-white z-10 text-center">AWS Cloud Resume Challenge</h4>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="flex space-x-2 mb-4">
+                            <span class="text-[10px] px-2 py-0.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded uppercase font-bold">Serverless</span>
+                            <span class="text-[10px] px-2 py-0.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded uppercase font-bold">IaC</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            A fully automated serverless portfolio. Infrastructure managed via Terraform, utilizing S3/CloudFront for frontend, Lambda (Python) for API logic, and DynamoDB for storage. 100% automated CI/CD with GitHub Actions.
+                        </p>
+                        <div class="flex items-center space-x-4 mt-auto">
+                            <a href="#" class="text-sm font-bold text-white hover:text-blue-400 flex items-center transition-colors">
+                                <i data-lucide="github" class="w-4 h-4 mr-2"></i> Code
+                            </a>
+                            <a href="#" class="text-sm font-bold text-white hover:text-blue-400 flex items-center transition-colors">
+                                <i data-lucide="eye" class="w-4 h-4 mr-2"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="glass rounded-2xl overflow-hidden flex flex-col group h-full">
+                    <div class="h-48 bg-gradient-to-br from-emerald-600 to-teal-900 p-8 flex items-center justify-center relative">
+                        <i data-lucide="cpu" class="w-20 h-20 text-white opacity-20 absolute top-4 right-4"></i>
+                        <h4 class="text-2xl font-bold text-white z-10 text-center">K8s Monitoring Stack</h4>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="flex space-x-2 mb-4">
+                            <span class="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded uppercase font-bold">Observability</span>
+                            <span class="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded uppercase font-bold">Helm</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            Deployed a full observability suite on EKS using Prometheus and Grafana. Configured custom alerting rules for node CPU pressure and pod restarts. Managed deployments via Helm charts and ArgoCD for GitOps.
+                        </p>
+                        <div class="flex items-center space-x-4 mt-auto">
+                            <a href="#" class="text-sm font-bold text-white hover:text-emerald-400 flex items-center transition-colors">
+                                <i data-lucide="github" class="w-4 h-4 mr-2"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="glass rounded-2xl overflow-hidden flex flex-col group h-full">
+                    <div class="h-48 bg-gradient-to-br from-purple-600 to-pink-900 p-8 flex items-center justify-center relative">
+                        <i data-lucide="shield-check" class="w-20 h-20 text-white opacity-20 absolute top-4 right-4"></i>
+                        <h4 class="text-2xl font-bold text-white z-10 text-center">IAM Security Auditor</h4>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="flex space-x-2 mb-4">
+                            <span class="text-[10px] px-2 py-0.5 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded uppercase font-bold">Security</span>
+                            <span class="text-[10px] px-2 py-0.5 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded uppercase font-bold">Automation</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            Python-based security automation tool that scans AWS accounts for over-privileged IAM users, unencrypted S3 buckets, and exposed RDS snapshots. Generates PDF reports via AWS Lambda.
+                        </p>
+                        <div class="flex items-center space-x-4 mt-auto">
+                            <a href="#" class="text-sm font-bold text-white hover:text-purple-400 flex items-center transition-colors">
+                                <i data-lucide="github" class="w-4 h-4 mr-2"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Reach Stats (Fake/Static for UI) -->
+    <div class="py-12 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-4xl font-extrabold text-blue-500 mb-2">99.9%</div>
+                <div class="text-xs uppercase tracking-widest text-gray-500 font-bold">Uptime Track Record</div>
+            </div>
+            <div>
+                <div class="text-4xl font-extrabold text-blue-500 mb-2">400+</div>
+                <div class="text-xs uppercase tracking-widest text-gray-500 font-bold">Terraform Applys</div>
+            </div>
+            <div>
+                <div class="text-4xl font-extrabold text-blue-500 mb-2">15+</div>
+                <div class="text-xs uppercase tracking-widest text-gray-500 font-bold">AWS Services Mastered</div>
+            </div>
+            <div>
+                <div class="text-4xl font-extrabold text-blue-500 mb-2" id="visitor-count">2.4k</div>
+                <div class="text-xs uppercase tracking-widest text-gray-500 font-bold">Site Visitors</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact & Footer -->
+    <footer id="contact" class="pt-20 pb-10 bg-black/60 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+                <div>
+                    <h2 class="text-4xl font-extrabold mb-6">Let's Build Something <span class="text-blue-500">Resilient.</span></h2>
+                    <p class="text-gray-400 mb-8 max-w-md">I'm currently looking for opportunities to lead cloud migrations or scale DevOps practices in forward-thinking companies.</p>
+                    
+                    <div class="space-y-4">
+                        <a href="mailto:yourmail@example.com" class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
+                            <i data-lucide="mail" class="mr-4 w-5 h-5"></i> ousseynou.diop@cloudarchitect.io
+                        </a>
+                        <a href="#" class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
+                            <i data-lucide="linkedin" class="mr-4 w-5 h-5"></i> linkedin.com/in/ousseynou-diop
+                        </a>
+                        <a href="#" class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
+                            <i data-lucide="github" class="mr-4 w-5 h-5"></i> github.com/ousseynou-cloud
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-2xl">
+                    <form id="contact-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase text-gray-500">Full Name</label>
+                                <input type="text" placeholder="Your Name" class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors text-white">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase text-gray-500">Email Address</label>
+                                <input type="email" placeholder="email@company.com" class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors text-white">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase text-gray-500">Subject</label>
+                            <input type="text" placeholder="Hiring for Cloud Architect Role" class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors text-white">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase text-gray-500">Message</label>
+                            <textarea rows="4" placeholder="How can I help you?" class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors text-white"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/20">
+                            Transmit Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                <p>© 2026 Ousseynou Diop. Built with AWS & Resilience.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <span class="flex items-center"><i data-lucide="shield" class="w-4 h-4 mr-2"></i> GDPR Compliant</span>
+                    <span class="flex items-center"><i data-lucide="zap" class="w-4 h-4 mr-2"></i> 100ms Load Time</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Fade-in Observer
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, .glass').forEach(el => {
+            el.classList.add('fade-in');
+            observer.observe(el);
+        });
+
+        // Visitor Counter Simulation
+        async function fetchVisitorCount() {
+            const counterElement = document.getElementById("visitor-count");
+            try {
+                setTimeout(() => {
+                    const mockCount = (Math.floor(Math.random() * 500) + 2400).toLocaleString();
+                    counterElement.innerText = mockCount;
+                }, 1000);
+            } catch (err) {
+                counterElement.innerText = "Error";
+            }
+        }
+
+        fetchVisitorCount();
+
+        // Form Handling
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Transmitting...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = "Message Received!";
+                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                e.target.reset();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

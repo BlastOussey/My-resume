@@ -3,246 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ousseynou Diop | Full-Stack, Cloud & Data Solutions</title>
+    <title>Ousseynou Diop | Engineering Intelligence</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Apple-esque Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #0ea5e9;
-            --accent: #f43f5e;
-            --dark-bg: #030712;
-            --card-bg: #111827;
+            --apple-black: #000000;
+            --apple-blue: #2997ff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--dark-bg);
-            color: #f3f4f6;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--apple-black);
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
-        .glass {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* 3D Canvas Styling */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000000 100%);
         }
 
-        .hero-gradient {
-            background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+        /* Apple Spatial UI / Glassmorphism */
+        .apple-nav {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: saturate(180%) blur(25px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .service-card {
+        .hero-title {
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .service-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.4);
+        .btn-primary:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
-        .nav-link:hover { color: var(--primary); }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #312e81; border-radius: 10px; }
+        .apple-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.5s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .apple-card:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .section-padding { padding: 160px 24px; }
+
+        .booking-overlay {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Animated Gradients */
+        .gradient-sphere {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(41, 151, 255, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        input, textarea, select {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
 
-<body class="hero-gradient">
-    <nav class="fixed top-0 w-full z-50 glass px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">OD</div>
-                <span class="text-xl font-extrabold tracking-tight">Ousseynou<span class="text-indigo-500">.</span></span>
+<body>
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 apple-nav h-14 flex items-center">
+        <div class="max-w-6xl mx-auto w-full flex justify-between px-6 items-center">
+            <div class="flex items-center space-x-12">
+                <a href="#" class="font-bold text-xl tracking-tighter">OUSSEYNOU DIOP</a>
+                <div class="hidden md:flex space-x-8 text-[13px] font-medium text-gray-400">
+                    <a href="#services" class="hover:text-white transition-colors uppercase tracking-widest">Services</a>
+                    <a href="#portfolio" class="hover:text-white transition-colors uppercase tracking-widest">Projects</a>
+                </div>
             </div>
-            
-            <div class="hidden md:flex items-center space-x-10">
-                <a href="#services" class="nav-link text-sm font-semibold transition-colors">Services</a>
-                <a href="#portfolio" class="nav-link text-sm font-semibold transition-colors">Portfolio</a>
-                <a href="#booking" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-bold transition-all shadow-lg shadow-indigo-500/20">Book a Consultation</a>
-            </div>
+            <a href="#booking" class="btn-primary px-6 py-1.5 rounded-full text-[12px] font-bold uppercase tracking-wider">
+                Book Consultation
+            </a>
         </div>
     </nav>
 
-    <header class="pt-48 pb-32 px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
-                Engineering <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-emerald-400">Intelligence</span> <br>into Infrastructure.
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center px-6 text-center pt-20">
+        <div class="gradient-sphere top-[-200px] left-[-200px]"></div>
+        <div class="max-w-5xl mx-auto">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-[10px] font-black uppercase tracking-[0.3em] mb-8 animate-pulse">
+                Engineering for the Next Decade
+            </span>
+            <h1 class="hero-title text-6xl md:text-9xl font-bold mb-10 leading-tight">
+                Architecting<br>Future Intelligence.
             </h1>
-            <p class="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-                I bridge the gap between high-performance Web Apps, scalable Cloud Architectures, and Data-driven insights to help businesses automate and grow.
+            <p class="text-xl md:text-2xl text-gray-400 font-medium mb-14 max-w-3xl mx-auto leading-relaxed">
+                A synthesis of Full-Stack mastery, Cloud Resilience, and Generative Data Science.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#booking" class="px-10 py-5 bg-white text-black font-extrabold rounded-2xl hover:scale-105 transition-transform flex items-center justify-center">
-                    Reserve Your Project Slot <i data-lucide="calendar" class="ml-3 w-5 h-5"></i>
+                <a href="#booking" class="btn-primary px-10 py-5 rounded-2xl font-black text-lg uppercase tracking-widest">
+                    Start a Project
                 </a>
-                <a href="#portfolio" class="px-10 py-5 glass text-white font-extrabold rounded-2xl hover:bg-white/5 transition-all flex items-center justify-center">
-                    View Portfolio
+                <a href="#portfolio" class="px-10 py-5 rounded-2xl font-black text-lg text-white border border-white/20 hover:bg-white/10 transition-all uppercase tracking-widest">
+                    Explore Work
                 </a>
             </div>
         </div>
     </header>
 
-    <section id="services" class="py-24 px-6 bg-black/30">
+    <!-- Services -->
+    <section id="services" class="section-padding">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl font-extrabold mb-4">Core Expertise</h2>
-                <p class="text-gray-500">End-to-end technical delivery for modern enterprises.</p>
-            </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="service-card glass p-10 rounded-3xl relative overflow-hidden group">
-                    <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 mb-8">
-                        <i data-lucide="layers" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Full Stack Development</h3>
-                    <p class="text-gray-400 mb-6">Building performant, SEO-optimized web applications using React, Node.js, and modern databases. Focused on user experience and business logic.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-indigo-500"></i> SaaS Platforms</li>
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-indigo-500"></i> Custom CRM/ERPs</li>
-                    </ul>
-                </div>
-
-                <div class="service-card glass p-10 rounded-3xl border-indigo-500/20 shadow-2xl">
-                    <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center text-sky-400 mb-8">
-                        <i data-lucide="cloud" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Cloud & DevOps</h3>
-                    <p class="text-gray-400 mb-6">Architecting resilient AWS/Azure environments. I specialize in CI/CD automation, serverless scaling, and cloud cost optimization.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-sky-500"></i> Infrastructure as Code</li>
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-sky-500"></i> Zero-Downtime Migrations</li>
-                    </ul>
-                </div>
-
-                <div class="service-card glass p-10 rounded-3xl">
-                    <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 mb-8">
-                        <i data-lucide="database" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Data Science & AI</h3>
-                    <p class="text-gray-400 mb-6">Turning raw data into revenue. Predictive modeling, automated data pipelines, and integrating AI into existing workflows.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-emerald-500"></i> Predictive Analytics</li>
-                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-emerald-500"></i> Custom AI Agents</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="portfolio" class="py-24 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16">
-                <div>
-                    <h2 class="text-4xl font-black mb-4 underline decoration-indigo-500 decoration-4 underline-offset-8">Selected Projects</h2>
-                    <p class="text-gray-400">Featured work in Software Engineering and Data Architecture.</p>
-                </div>
-                <a href="#" class="mt-6 text-indigo-400 font-bold flex items-center group">
-                    Browse Github <i data-lucide="arrow-right" class="ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="group relative overflow-hidden rounded-3xl glass">
-                    <div class="h-64 bg-indigo-900/40 p-12">
-                        <div class="w-full h-full border-2 border-dashed border-indigo-500/30 rounded-xl flex items-center justify-center">
-                            <i data-lucide="code-2" class="w-12 h-12 text-indigo-500"></i>
+                <div class="apple-card p-12 flex flex-col justify-between min-h-[500px]">
+                    <div>
+                        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-10 border border-blue-500/30">
+                            <i data-lucide="cpu" class="w-8 h-8 text-blue-400"></i>
                         </div>
+                        <h3 class="text-3xl font-bold mb-6 tracking-tight">Full Stack Architecture</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">Hyper-efficient web systems built for scale. Specializing in high-concurrency Node.js and React Ecosystems.</p>
                     </div>
-                    <div class="p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <h4 class="text-2xl font-bold">Predictive E-commerce Engine</h4>
-                            <span class="text-xs font-mono bg-indigo-500/20 px-2 py-1 rounded text-indigo-300">Data Science</span>
-                        </div>
-                        <p class="text-gray-400 text-sm mb-6">Built a recommendation system using Python and AWS SageMaker that increased conversion by 14% for a local retailer.</p>
-                        <a href="#" class="inline-flex items-center text-white font-bold hover:text-indigo-400 transition-colors">
-                            Case Study <i data-lucide="external-link" class="ml-2 w-4 h-4"></i>
-                        </a>
+                    <div class="pt-8 border-t border-white/5 group cursor-pointer flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-widest text-blue-400">View Capabilities</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-blue-400 transform group-hover:translate-x-2 transition-transform"></i>
                     </div>
                 </div>
 
-                <div class="group relative overflow-hidden rounded-3xl glass">
-                    <div class="h-64 bg-emerald-900/40 p-12">
-                        <div class="w-full h-full border-2 border-dashed border-emerald-500/30 rounded-xl flex items-center justify-center">
-                            <i data-lucide="server" class="w-12 h-12 text-emerald-500"></i>
+                <div class="apple-card p-12 flex flex-col justify-between min-h-[500px]">
+                    <div>
+                        <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-10 border border-purple-500/30">
+                            <i data-lucide="cloud-lightning" class="w-8 h-8 text-purple-400"></i>
                         </div>
+                        <h3 class="text-3xl font-bold mb-6 tracking-tight">Cloud Sovereignty</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">Distributed AWS/Azure infrastructure with automated self-healing and zero-downtime deployment pipelines.</p>
                     </div>
-                    <div class="p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <h4 class="text-2xl font-bold">Serverless Financial Portal</h4>
-                            <span class="text-xs font-mono bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">Cloud & Web</span>
+                    <div class="pt-8 border-t border-white/5 group cursor-pointer flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-widest text-purple-400">View Capabilities</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-purple-400 transform group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div class="apple-card p-12 flex flex-col justify-between min-h-[500px]">
+                    <div>
+                        <div class="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-10 border border-emerald-500/30">
+                            <i data-lucide="brain-circuit" class="w-8 h-8 text-emerald-400"></i>
                         </div>
-                        <p class="text-gray-400 text-sm mb-6">Secure, HIPAA-compliant portal handling $2M+ in transactions via AWS Lambda and Stripe integration.</p>
-                        <a href="#" class="inline-flex items-center text-white font-bold hover:text-emerald-400 transition-colors">
-                            Case Study <i data-lucide="external-link" class="ml-2 w-4 h-4"></i>
-                        </a>
+                        <h3 class="text-3xl font-bold mb-6 tracking-tight">AI & Deep Learning</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">Custom LLM integrations and predictive analytics engines that transform raw data into actionable business wisdom.</p>
+                    </div>
+                    <div class="pt-8 border-t border-white/5 group cursor-pointer flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-widest text-emerald-400">View Capabilities</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-emerald-400 transform group-hover:translate-x-2 transition-transform"></i>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="booking" class="py-24 px-6 bg-indigo-600/10">
-        <div class="max-w-4xl mx-auto glass p-12 rounded-[3rem] relative shadow-2xl border-indigo-500/30">
-            <div class="absolute -top-6 -right-6 w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl animate-pulse">
-                <i data-lucide="sparkles" class="text-white w-10 h-10"></i>
+    <!-- Booking Section -->
+    <section id="booking" class="section-padding relative">
+        <div class="gradient-sphere bottom-[-300px] right-[-300px] opacity-40"></div>
+        <div class="max-w-4xl mx-auto apple-card p-12 md:p-20 overflow-hidden">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-6 tracking-tighter">Initialize Consultation.</h2>
+                <p class="text-gray-400 text-xl font-medium">Synced with Google Calendar & Meet.</p>
             </div>
             
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-black mb-4">Reserve a Strategy Session</h2>
-                <p class="text-gray-400">Let’s discuss your technical roadmap. Secure your spot in my development queue.</p>
-            </div>
-
-            <form class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-500 ml-1">Service Required</label>
-                        <select class="w-full bg-gray-900 border border-white/10 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none text-white appearance-none">
-                            <option>Full Stack Development</option>
-                            <option>Cloud Infrastructure Setup</option>
-                            <option>Data Science/AI Integration</option>
-                            <option>Technical Consultation (Hourly)</option>
+            <form id="bookingForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 block">Project Nature</label>
+                        <select class="w-full p-4 rounded-2xl outline-none">
+                            <option>Platform Development</option>
+                            <option>Cloud Infrastructure</option>
+                            <option>Data/AI Consulting</option>
                         </select>
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-500 ml-1">Preferred Timeline</label>
-                        <select class="w-full bg-gray-900 border border-white/10 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none text-white">
-                            <option>ASAP (Next 2 Weeks)</option>
-                            <option>Next 30-60 Days</option>
-                            <option>Consultation Only</option>
-                        </select>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 block">Your Details</label>
+                        <input type="email" required placeholder="Email Address" class="w-full p-4 rounded-2xl outline-none mb-4">
+                        <textarea rows="4" placeholder="Briefly describe your objective..." class="w-full p-4 rounded-2xl outline-none"></textarea>
                     </div>
                 </div>
-                
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-500 ml-1">Your Email</label>
-                    <input type="email" placeholder="name@company.com" class="w-full bg-gray-900 border border-white/10 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none">
-                </div>
 
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-500 ml-1">Project Brief</label>
-                    <textarea rows="4" placeholder="Tell me about your goals..." class="w-full bg-gray-900 border border-white/10 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none"></textarea>
+                <div class="bg-white/5 rounded-3xl p-8 border border-white/10">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6 block">Select Arrival Time</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" onclick="selectTime(this)" class="p-3 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">09:00 AM</button>
+                        <button type="button" onclick="selectTime(this)" class="p-3 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">11:30 AM</button>
+                        <button type="button" onclick="selectTime(this)" class="p-3 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">02:00 PM</button>
+                        <button type="button" onclick="selectTime(this)" class="p-3 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">04:30 PM</button>
+                    </div>
+                    <div class="mt-8">
+                        <p class="text-xs text-gray-500 mb-6 flex items-center">
+                            <i data-lucide="info" class="w-3 h-3 mr-2"></i> Confirmations will be sent via Gmail.
+                        </p>
+                        <button type="submit" class="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-transform">
+                            Confirm Booking
+                        </button>
+                    </div>
                 </div>
-
-                <button type="submit" class="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/20 transition-all transform hover:scale-[1.02]">
-                    Book My Reservation
-                </button>
             </form>
         </div>
     </section>
 
-    <footer class="py-12 text-center text-gray-500 text-xs font-medium">
-        <p>© 2026 Ousseynou Diop. All Rights Reserved. Built for Scale.</p>
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center booking-overlay px-6">
+        <div class="apple-card p-12 max-w-sm text-center bg-black/90 border-white/20">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
+                <i data-lucide="zap" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-3xl font-bold mb-4 tracking-tight">System Synced</h3>
+            <p class="text-gray-400 mb-10 leading-relaxed">Your strategy session has been logged to Google Calendar. Check your inbox for the link.</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest">Acknowledge</button>
+        </div>
+    </div>
+
+    <footer class="py-20 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-[11px] font-black uppercase tracking-[0.2em] text-gray-600">
+            <p>© 2026 OUSSEYNOU DIOP / ENG_INTEL</p>
+            <div class="flex space-x-8 mt-8 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+                <a href="#" class="hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
     </footer>
 
     <script>
         lucide.createIcons();
+
+        // --- THREE.JS FUTURISTIC BACKGROUND ---
+        let scene, camera, renderer, points;
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            for (let i = 0; i < 8000; i++) {
+                vertices.push(
+                    Math.random() * 2000 - 1000,
+                    Math.random() * 2000 - 1000,
+                    Math.random() * 2000 - 1000
+                );
+            }
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0x2997ff,
+                size: 2,
+                transparent: true,
+                opacity: 0.5,
+                blending: THREE.AdditiveBlending
+            });
+
+            points = new THREE.Points(geometry, material);
+            scene.add(points);
+            camera.position.z = 500;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            points.rotation.y += 0.0005;
+            points.rotation.x += 0.0002;
+            
+            // Interaction: slowly follow mouse
+            points.position.x += (mouseX - points.position.x) * 0.05;
+            points.position.y += (-mouseY - points.position.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) / 100;
+            mouseY = (e.clientY - window.innerHeight / 2) / 100;
+        });
+
+        window.onload = () => {
+            initThree();
+            animate();
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- UI INTERACTION ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, .apple-card').forEach(el => {
+            el.classList.add('reveal');
+            observer.observe(el);
+        });
+
+        function selectTime(btn) {
+            btn.parentElement.querySelectorAll('button').forEach(b => {
+                b.classList.remove('bg-white', 'text-black', 'border-white');
+                b.classList.add('border-white/10');
+            });
+            btn.classList.add('bg-white', 'text-black', 'border-white');
+            btn.classList.remove('border-white/10');
+        }
+
+        document.getElementById('bookingForm').onsubmit = (e) => {
+            e.preventDefault();
+            document.getElementById('successModal').classList.remove('hidden');
+        };
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
